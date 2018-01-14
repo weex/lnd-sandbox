@@ -1,5 +1,5 @@
 from lnd_rpc import LNDRPC
-from time import sleep
+from time import sleep, gmtime, strftime
 import json
 import re
 from math import log
@@ -26,26 +26,25 @@ for n in g.nodes:
 
 node_ids = {}
 for n in g.nodes:
+    # use alias if unique, otherwise pub_key
     if aliases[n.alias] == 1:
-        node_ids[n.pub_key] = n.alias.rstrip(' \t\r\n\0') # re_pattern.sub('', n.alias)    
+        node_ids[n.pub_key] = n.alias.rstrip(' \t\r\n\0')
     else:
         node_ids[n.pub_key] = n.pub_key
 
-#re_pattern = re.compile(u'[^\u0000-\uD7FF\uE000-\uFFFF]', re.UNICODE)
-
 j_nodes = []
 for n in g.nodes:
-    # use alias if unique, otherwise pub_key
-    #j_nodes.append({"id": node_ids[n.pub_key], "group":1})
-    j_nodes.append({"id": n.pub_key, "group":n.color})
+    j_nodes.append({"id": node_ids[n.pub_key], "group":n.color})
 
 j_edges = []
 for e in g.edges:
-    #j_edges.append({"source": node_ids[e.node1_pub],
-    #                "target": node_ids[e.node2_pub],
-    j_edges.append({"source": e.node1_pub,
-                    "target": e.node2_pub,
-                    "value": int(30/log(e.capacity))})
+    j_edges.append({"source": node_ids[e.node1_pub],
+                    "target": node_ids[e.node2_pub],
+                    "value": int(50/log(e.capacity))})
 
 json_out = {"nodes": j_nodes, "links": j_edges}
 print json.dumps(json_out)
+
+f = open('data.json', 'w')
+f.write(json.dumps({'nodes': nodes, 'channels': channels, 'generated': strftime("%Y-%m-%d %H:%M:%S", gmtime())}))
+f.close()
