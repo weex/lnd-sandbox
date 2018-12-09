@@ -1,3 +1,7 @@
+# ln_stats.py - writes general network info to sdout, nodes and channels out to file "data.json"
+# Usage:
+#     $ python ln_stats.py
+
 from lnd_rpc import LNDRPC
 from time import sleep, gmtime, strftime
 import json
