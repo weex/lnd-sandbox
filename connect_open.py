@@ -1,3 +1,7 @@
+# connect_open.py - connect to a peer and immediately open a channel of 1m sats
+# Usage:
+#    $ connect_open.py pubkey@ip
+
 import rpc_pb2 as ln
 import rpc_pb2_grpc as lnrpc
 import grpc
