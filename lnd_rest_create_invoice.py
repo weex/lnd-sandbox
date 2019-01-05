@@ -37,5 +37,16 @@ data = {
 r = requests.post(url, headers=headers, verify=cert_path, data=json.dumps(data))
 try:
     print(r.json())
+    data = r.json()
+    import qrcode
+
+    qr = qrcode.QRCode(
+        error_correction=qrcode.constants.ERROR_CORRECT_H,
+    )
+    qr.add_data(data['payment_request'])
+    qr.print_ascii(invert=True)
+    print "Please pay: " + data['payment_request']
+    
 except:
     print("not json: " + r.text)
+
