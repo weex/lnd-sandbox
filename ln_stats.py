@@ -2,24 +2,19 @@
 # Usage:
 #     $ python ln_stats.py
 
-from lnd_rpc import LNDRPC
 from time import sleep, gmtime, strftime
 import subprocess
 import json
 import re
 from math import log
+import subprocess
 
-#l = LNDRPC()
-
-# get graph
-#g = l.describe_graph()
-
-
-g = json.loads(subprocess.check_output(['/home/dsterry/gocode/bin/lncli', 'describegraph']))
+o = subprocess.check_output(['lncli', 'describegraph'])
+g = json.loads(o)
 
 total_capacity = 0
 for e in g['edges']:
-    total_capacity += float(e['capacity'])
+    total_capacity += int(e['capacity'])
 
 channels = len(g['edges'])
 nodes = len(g['nodes'])
